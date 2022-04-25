@@ -1,0 +1,31 @@
+		ORG 0000H
+		SETB P1.1
+START:	MOV R6, #0				  // So hang chuc
+		MOV R7, #0				  // So hang don vi
+lOOP1:	MOV R5, #50 			  // So lan lap khi quet led 
+LOOP:	MOV DPTR, #0000H		  // BAT DAU QUET LED CHO DEN 1S
+		MOV A, #0D0H			  // 1101 0000
+		ADD A, R6
+		MOVX @DPTR, A
+		ACALL DELAY
+		MOV A, #0E0H
+		ADD A, R7
+		MOVX @DPTR, A
+		ACALL DELAY
+		DJNZ R5, LOOP			 // KIEM TRA HET SO LAN QUET LED
+		INC R7
+		CPL P1.1
+		CJNE R7, #10, $+3
+		JC LOOP1
+		INC R6
+		MOV R7, #0
+		CJNE R6, #10, LOOP1
+		SJMP START
+
+DELAY:		 // delay 10000us 
+		MOV R1, #50
+LOOPP:	MOV R2, #100
+		DJNZ R2, $
+		DJNZ R1, LOOPP
+		RET
+		END
